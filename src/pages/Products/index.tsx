@@ -2,10 +2,19 @@
 import React, { useEffect, useState } from 'react'
 import ContentCard from '../../components/ContentCard'
 
+type Product = {
+    id: number,
+    title: string,
+    brand: string,
+    thumbnail: string,
+    price: number,
+    description: string
+}
+
 const Products: React.FC = () => {
-    const [search, setSearch] = useState('')
-    const [products, setProducts] = useState([])
-    const [amount, setAmount] = useState(20)
+    const [search, setSearch] = useState<string>('')
+    const [products, setProducts] = useState<Product[]>([])
+    const [amount, setAmount] = useState<number>(20)
     
     useEffect(() => {
         function loadMore(){
@@ -27,7 +36,7 @@ const Products: React.FC = () => {
         //remove event listener when unmount    
         return () => window.removeEventListener('scroll', loadMore)
     }, [amount, search])
-    
+
   return (
     <div className="w-full">
         <div className='flex w-1/5 fixed top-0 left-2 mt-5'>
