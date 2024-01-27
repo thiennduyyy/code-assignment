@@ -15,11 +15,13 @@ const Products: React.FC = () => {
     const [search, setSearch] = useState<string>('')
     const [products, setProducts] = useState<Product[]>([])
     const [amount, setAmount] = useState<number>(20)
+    const [allFetched, setAllFetched] = useState<boolean>(false)
+    console.log(amount)
     
     useEffect(() => {
         function loadMore(){
             //checking if page is scrolled to the end
-            if ((document.scrollingElement && window.innerHeight + document.documentElement.scrollTop + 1 >= document.scrollingElement.scrollHeight) && search === '') {
+            if ((document.scrollingElement && window.innerHeight + document.documentElement.scrollTop + 1 >= document.scrollingElement.scrollHeight) && search === '' && !allFetched) {
                 setAmount(prev => (prev + 20))
             }
         }
@@ -30,12 +32,16 @@ const Products: React.FC = () => {
         fetch(fetchLink)
             .then(res => res.json())
             .then(res => {
-            setProducts(res.products)
+                if (res.products.length === products.length) {
+                    setAllFetched(true)
+                } else {
+                    setProducts(res.products)
+                }
             })
 
         //remove event listener when unmount    
         return () => window.removeEventListener('scroll', loadMore)
-    }, [amount, search])
+    }, [amount, search, allFetched])
 
   return (
     <div className="w-full">
